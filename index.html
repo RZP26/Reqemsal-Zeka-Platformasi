@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riyaziyyat 8-ci sinif • İnteraktiv kartlar</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e3a8a);min-height:100vh;color:#0f172a;display:flex;align-items:center;justify-content:center;padding:24px}.app{width:min(900px,100%)}.header{color:white;margin-bottom:18px}.header h1{margin:0 0 6px;font-size:clamp(28px,5vw,42px)}.header p{margin:0;color:#dbeafe}.card{background:#fff;border-radius:26px;padding:30px;box-shadow:0 24px 60px rgba(0,0,0,.25)}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.badge{background:#dbeafe;color:#1e40af;font-weight:700;padding:8px 12px;border-radius:999px}.score{font-weight:800}.progress{height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin-bottom:30px}.bar{height:100%;width:0;background:#2563eb;transition:.3s}.question{font-size:clamp(24px,4vw,34px);line-height:1.25;font-weight:800;margin:22px 0}.answer{display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:20px;margin:18px 0}.answer.show{display:block}.answer b{color:#166534}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.btn{border:0;border-radius:14px;padding:13px 18px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:#2563eb;color:#fff}.secondary{background:#e2e8f0;color:#0f172a}.success{background:#16a34a;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.mini{background:#f8fafc;border-radius:14px;padding:14px}.mini small{display:block;color:#64748b;margin-bottom:3px}.finish{display:none;text-align:center}.finish.show{display:block}.finish h2{font-size:34px;margin-top:8px}.score-big{font-size:60px;font-weight:900;color:#2563eb}.footer{text-align:center;color:#cbd5e1;font-size:13px;margin-top:14px}@media(max-width:640px){.card{padding:20px}.meta{grid-template-columns:1fr}.actions .btn{width:100%}}</style>
+</head>
+<body>
+<div class="app">
+  <div class="header"><h1>Riyaziyyat • 8-ci sinif</h1><p>İnteraktiv bilik kartları | Cavabı aç, düşün, yoxla və xal qazan.</p></div>
+  <div class="card">
+    <div id="game">
+      <div class="top"><span class="badge" id="topic">Cəbr</span><span class="score">Xal: <span id="score">0</span></span></div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div id="counter" style="color:#64748b;font-weight:700"></div>
+      <div class="question" id="question"></div>
+      <div class="answer" id="answer"></div>
+      <div class="actions">
+        <button class="btn secondary" id="showBtn">👁 Cavabı göstər</button>
+        <button class="btn primary" id="nextBtn" disabled>➡️ Növbəti kart</button>
+      </div>
+      <div class="meta">
+        <div class="mini"><small>Səviyyə</small><strong id="level">Orta</strong></div>
+        <div class="mini"><small>Məqsəd</small><strong>Qaydadan tətbiqə</strong></div>
+      </div>
+    </div>
+    <div class="finish" id="finish">
+      <div style="font-size:48px">🎉</div><h2>Kartlar tamamlandı!</h2>
+      <div class="score-big" id="finalScore">0</div>
+      <p>12 kartdan ibarət məşqi bitirdiniz.</p>
+      <button class="btn success" onclick="restart()">🔄 Yenidən başla</button>
+    </div>
+  </div>
+  <div class="footer">Rəqəmsal Zəka Platforması • Tədris üçün hazırlanmış interaktiv nümunə</div>
+</div>
+<script>
+const cards=[
+ {topic:'Cəbr',level:'Asan',q:'3x + 7 = 22 tənliyində x-in qiyməti neçədir?',a:'3x = 15, deməli x = 5.'},
+ {topic:'Cəbr',level:'Orta',q:'x² − 9 ifadəsini vuruqlara ayırın.',a:'Fərqlərin kvadratı: x² − 3² = (x − 3)(x + 3).'},
+ {topic:'Faiz',level:'Orta',q:'240 manatın 15%-i neçə manatdır?',a:'240 × 0,15 = 36 manat.'},
+ {topic:'Funksiya',level:'Orta',q:'y = 2x + 1 funksiyasında x = 4 olduqda y neçədir?',a:'y = 2·4 + 1 = 9.'},
+ {topic:'Kvadrat tənlik',level:'Çətin',q:'x² − 5x + 6 = 0 tənliyinin kökləri hansılardır?',a:'(x − 2)(x − 3)=0 olduğundan köklər 2 və 3-dür.'},
+ {topic:'Həndəsə',level:'Orta',q:'Üçbucağın daxili bucaqlarının cəmi neçə dərəcədir?',a:'Hər üçbucaqda daxili bucaqların cəmi 180°-dir.'},
+ {topic:'Pifaqor',level:'Orta',q:'Katetləri 6 sm və 8 sm olan düzbucaqlı üçbucağın hipotenuzu neçə sm-dir?',a:'c = √(6² + 8²) = √100 = 10 sm.'},
+ {topic:'Mütənasiblik',level:'Asan',q:'3 dəftər 9 manatdırsa, 7 dəftər neçə manat edər?',a:'1 dəftər 3 manatdır. 7 dəftər 21 manatdır.'},
+ {topic:'Ədədlər',level:'Asan',q:'−7 + 12 ifadəsinin qiyməti neçədir?',a:'12 − 7 = 5.'},
+ {topic:'Qüvvətlər',level:'Orta',q:'2³ · 2² hasilini sadələşdirin.',a:'Eyni əsaslı qüvvətlər vurulduqda üstlər toplanır: 2⁵ = 32.'},
+ {topic:'Həndəsə',level:'Çətin',q:'Düzbucaqlının tərəfləri 7 sm və 4 sm-dir. Sahəsi neçə sm²-dir?',a:'S = a·b = 7·4 = 28 sm².'},
+ {topic:'Statistika',level:'Orta',q:'4, 6, 8, 10, 12 ədədlərinin ədədi ortası neçədir?',a:'Cəm 40, say 5-dir. 40/5 = 8.'}
+];
+let index=0,score=0;
+const $=id=>document.getElementById(id);
+function render(){const c=cards[index];$('topic').textContent=c.topic;$('level').textContent=c.level;$('counter').textContent=`Kart ${index+1} / ${cards.length}`;$('question').textContent=c.q;$('answer').innerHTML='<b>Cavab:</b> '+c.a;$('answer').classList.remove('show');$('showBtn').disabled=false;$('nextBtn').disabled=true;$('bar').style.width=((index)/cards.length*100)+'%';}
+$('showBtn').onclick=()=>{if(!$('answer').classList.contains('show')){$('answer').classList.add('show');$('showBtn').disabled=true;$('nextBtn').disabled=false;score+=10;$('score').textContent=score;}};
+$('nextBtn').onclick=()=>{index++;if(index>=cards.length){$('game').style.display='none';$('finish').classList.add('show');$('finalScore').textContent=score+' xal';$('bar').style.width='100%';}else render();};
+function restart(){index=0;score=0;$('score').textContent=0;$('finish').classList.remove('show');$('game').style.display='block';render();}
+render();
+</script>
+</body>
+</html>
