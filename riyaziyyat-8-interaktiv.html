@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>8-ci sinif Riyaziyyat | İnteraktiv qiymətləndirmə</title>
+<style>
+:root{--bg1:#0b1220;--bg2:#172554;--card:#fff;--text:#0f172a;--muted:#64748b;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--gold:#f59e0b}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at top right,#2563eb55,transparent 32%),linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;color:var(--text);padding:22px}
+.wrap{width:min(980px,100%);margin:auto}.head{color:#fff;margin-bottom:16px}.head h1{margin:0;font-size:clamp(26px,5vw,42px)}.head p{margin:7px 0 0;color:#dbeafe}.card{background:var(--card);border-radius:24px;box-shadow:0 22px 70px #0005;padding:26px}.top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.pill{padding:9px 13px;border-radius:999px;font-weight:900;background:#eff6ff;color:#1d4ed8}.timer{background:#fee2e2;color:#991b1b}.timer.safe{background:#dcfce7;color:#166534}.score{background:#fef3c7;color:#92400e}.progress{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin:18px 0 10px}.bar{height:100%;width:0;background:linear-gradient(90deg,#2563eb,#7c3aed);transition:.25s}.counter{font-weight:800;color:var(--muted)}.q{font-size:clamp(22px,4vw,34px);line-height:1.3;font-weight:900;margin:22px 0}.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{border:2px solid #e2e8f0;border-radius:16px;background:#f8fafc;padding:16px;text-align:left;font-size:17px;font-weight:800;cursor:pointer;transition:.15s}.opt:hover{border-color:#93c5fd;background:#eff6ff}.opt.correct{border-color:var(--green);background:#dcfce7;color:#166534}.opt.wrong{border-color:var(--red);background:#fee2e2;color:#991b1b}.opt:disabled{cursor:default}.feedback{margin-top:15px;padding:14px 16px;border-radius:15px;display:none;font-weight:800}.feedback.show{display:block}.feedback.good{background:#dcfce7;color:#166534}.feedback.bad{background:#fee2e2;color:#991b1b}.actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:18px}.btn{border:0;background:var(--blue);color:white;font-weight:900;padding:13px 18px;border-radius:14px;cursor:pointer}.btn.secondary{background:#e2e8f0;color:#0f172a}.btn:disabled{opacity:.45;cursor:not-allowed}.weight{color:var(--muted);font-weight:800}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat{background:#f8fafc;border-radius:14px;padding:12px}.stat small{display:block;color:var(--muted);margin-bottom:3px}.finish{display:none;text-align:center}.finish.show{display:block}.big{font-size:64px;font-weight:950;color:var(--blue)}.grade{font-size:30px;font-weight:950;margin:6px 0 18px}.result{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.result>div{background:#f8fafc;padding:14px;border-radius:14px}.result b{display:block;font-size:25px;margin-top:4px}.rules{margin-top:18px;text-align:left;background:#eff6ff;color:#1e3a8a;border-radius:16px;padding:16px;line-height:1.55}.note{margin-top:10px;color:#475569;font-size:14px}.footer{text-align:center;color:#cbd5e1;margin-top:11px;font-size:13px}@media(max-width:700px){body{padding:12px}.card{padding:18px}.opts{grid-template-columns:1fr}.stats,.result{grid-template-columns:1fr 1fr}.actions{flex-direction:column;align-items:stretch}.actions .btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="head"><h1>Riyaziyyat | 8-ci sinif</h1><p>İnteraktiv qiymətləndirmə • 15 sual • 35 dəqiqə • maksimum 100 bal</p></header>
+<section class="card" id="game">
+  <div class="top"><span class="pill" id="topic">Mövzu</span><span class="pill timer" id="timer">35:00</span><span class="pill score">🏆 <span id="score">0</span> bal</span></div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="counter" id="counter"></div>
+  <div class="q" id="question"></div>
+  <div class="opts" id="options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="actions"><span class="weight" id="weight"></span><button class="btn" id="next" disabled>Növbəti sual →</button></div>
+  <div class="stats"><div class="stat"><small>Cavabsız</small><strong id="unanswered">15</strong></div><div class="stat"><small>Cari sual</small><strong id="currentPoints">0 bal</strong></div><div class="stat"><small>Vaxt</small><strong>35 dəqiqə</strong></div></div>
+</section>
+<section class="card finish" id="finish">
+  <div style="font-size:48px">🎓</div><h2>Qiymətləndirmə tamamlandı</h2><div class="big" id="finalScore">0 bal</div><div class="grade" id="gradeText"></div>
+  <div class="result"><div><small>Düzgün</small><b id="correctCount">0</b></div><div><small>Səhv</small><b id="wrongCount">0</b></div><div><small>Faiz</small><b id="percent">0%</b></div><div><small>Cəhd</small><b id="attempt">1</b></div></div>
+  <div class="rules"><b>Qiymətləndirmə şkalası</b><br>0–30 bal → 2<br>30–60 bal → 3<br>60–80 bal → 4<br>80–100 bal → 5<br><br><b>Sual çəkiləri</b><br>4×3 + 2×4 + 5×6 + 3×10 + 1×20 = 100 bal</div>
+  <div class="note">Qeyd: Sərhəd qiymətləri növbəti pilləyə daxil edilir: 30 bal → 3, 60 bal → 4, 80 bal → 5.</div>
+  <button class="btn" onclick="restart()" style="margin-top:18px">🔄 Yenidən başla</button>
+</section>
+<footer class="footer">Rəqəmsal Zəka Platforması • 60 suallıq sual bankı • hər yeni cəhddə təsadüfi 15 sual</footer>
+</div>
+<script>
+// 60 suallıq bank. Çəkilər istifadəçinin tələb etdiyi 100 ballıq bölgüyə tam uyğundur.
+const bank = [
+  {t:'Hesablama',d:'Asan',q:'17 + 8 neçədir?',o:['23','24','25','26'],a:2,e:'17+8=25',p:3},
+  {t:'Hesablama',d:'Asan',q:'36 ÷ 4 neçədir?',o:['7','8','9','10'],a:2,e:'36÷4=9',p:3},
+  {t:'Hesablama',d:'Asan',q:'7 × 6 neçədir?',o:['36','42','48','49'],a:1,e:'7×6=42',p:3},
+  {t:'Hesablama',d:'Asan',q:'45 − 19 neçədir?',o:['24','25','26','27'],a:2,e:'45−19=26',p:3},
+  {t:'Kəsrlər',d:'Asan',q:'1/4 + 2/4 neçədir?',o:['1/2','2/4','3/4','1'],a:2,e:'Məxrəclər eynidir: 1/4+2/4=3/4',p:3},
+  {t:'Faiz',d:'Asan',q:'200-ün 10%-i neçədir?',o:['10','20','30','40'],a:1,e:'200×0,10=20',p:3},
+  {t:'Tam ədədlər',d:'Asan',q:'−6 + 11 neçədir?',o:['−17','−5','5','17'],a:2,e:'−6+11=5',p:3},
+  {t:'Cəbr',d:'Asan',q:'x+7=12 olarsa x neçədir?',o:['3','4','5','6'],a:2,e:'x=12−7=5',p:3},
+  {t:'Cəbr',d:'Orta',q:'3x=21 olarsa x neçədir?',o:['6','7','8','9'],a:1,e:'x=21÷3=7',p:4},
+  {t:'Kəsrlər',d:'Orta',q:'2/5 + 1/5 neçədir?',o:['2/5','3/5','4/5','1'],a:1,e:'2/5+1/5=3/5',p:4},
+  {t:'Faiz',d:'Orta',q:'80-in 25%-i neçədir?',o:['15','20','25','30'],a:1,e:'80×0,25=20',p:4},
+  {t:'Həndəsə',d:'Orta',q:'Tərəfi 6 sm olan kvadratın sahəsi neçədir?',o:['12','24','36','42'],a:2,e:'S=6²=36 sm²',p:4},
+  {t:'Qüvvətlər',d:'Orta',q:'2³ + 2² neçədir?',o:['8','10','12','16'],a:1,e:'8+4=12',p:4},
+  {t:'Ədədi orta',d:'Orta',q:'4, 6, 8 ədədlərinin ədədi ortası neçədir?',o:['5','6','7','8'],a:1,e:'(4+6+8)/3=6',p:4},
+  {t:'Tənlik',d:'Orta',q:'5x−10=15 olarsa x neçədir?',o:['4','5','6','7'],a:1,e:'5x=25, x=5',p:4},
+  {t:'Mütənasiblik',d:'Orta',q:'3 dəftər 9 manatdırsa 5 dəftər neçə manatdır?',o:['12','15','18','20'],a:1,e:'1 dəftər 3 manat; 5 dəftər 15 manat',p:4},
+  {t:'Cəbr',d:'Orta',q:'4x+2=18 tənliyində x neçədir?',o:['3','4','5','6'],a:1,e:'4x=16, x=4',p:6},
+  {t:'Cəbr',d:'Orta',q:'2(x+3)=16 olarsa x neçədir?',o:['4','5','6','7'],a:1,e:'x+3=8, x=5',p:6},
+  {t:'Faiz',d:'Orta',q:'300 manatın 20%-i neçə manatdır?',o:['50','60','70','80'],a:1,e:'300×0,20=60',p:6},
+  {t:'Qüvvətlər',d:'Orta',q:'3²×3 neçədir?',o:['9','18','27','36'],a:2,e:'9×3=27',p:6},
+  {t:'Tam ədədlər',d:'Orta',q:'−4×(−5) neçədir?',o:['−20','−9','9','20'],a:3,e:'Mənfi×mənfi=müsbət, nəticə 20',p:6},
+  {t:'Həndəsə',d:'Orta',q:'Düzbucaqlının tərəfləri 8 sm və 5 smdir. Perimetri neçədir?',o:['13','26','40','80'],a:1,e:'P=2(8+5)=26 sm',p:6},
+  {t:'Həndəsə',d:'Orta',q:'Üçbucağın bucaqları 50° və 60°dirsə üçüncü bucaq neçədir?',o:['60°','70°','80°','90°'],a:1,e:'180−50−60=70°',p:6},
+  {t:'Pifaqor',d:'Orta',q:'Katetləri 3 sm və 4 sm olan düzbucaqlı üçbucağın hipotenuzu neçədir?',o:['4','5','6','7'],a:1,e:'√(3²+4²)=5',p:6},
+  {t:'Funksiya',d:'Orta',q:'y=2x+1, x=4 olduqda y neçədir?',o:['7','8','9','10'],a:2,e:'2×4+1=9',p:6},
+  {t:'Kəsrlər',d:'Orta',q:'3/4−1/4 neçədir?',o:['1/4','1/2','2/3','3/4'],a:1,e:'2/4=1/2',p:6},
+  {t:'Faiz',d:'Orta',q:'500 manat 10% artırıldıqda yeni qiymət neçədir?',o:['510','540','550','600'],a:2,e:'500+50=550',p:6},
+  {t:'Statistika',d:'Orta',q:'2, 5, 5, 7, 9 ədədlərinin modası hansıdır?',o:['2','5','7','9'],a:1,e:'Ən çox təkrarlanan ədəd 5-dir',p:6},
+  {t:'Həndəsə',d:'Orta',q:'Radiusu 7 sm olan çevrənin diametri neçədir?',o:['7','14','21','28'],a:1,e:'d=2r=14 sm',p:6},
+  {t:'Cəbr',d:'Orta',q:'x²=64 və x>0 olarsa x neçədir?',o:['−8','0','8','64'],a:2,e:'Müsbət kök 8-dir',p:6},
+  {t:'Mütənasiblik',d:'Orta',q:'4 kq alma 12 manatdırsa 7 kq neçə manatdır?',o:['18','20','21','24'],a:2,e:'1 kq=3 manat; 7 kq=21 manat',p:6},
+  {t:'Kvadrat tənlik',d:'Çətin',q:'x²−5x+6=0 tənliyinin kökləri hansıdır?',o:['1 və 6','2 və 3','−2 və −3','0 və 6'],a:1,e:'(x−2)(x−3)=0',p:6},
+  {t:'Cəbr',d:'Çətin',q:'2x−3=5x−15 tənliyində x neçədir?',o:['3','4','5','6'],a:2,e:'12=3x, x=4',p:6},
+  {t:'Funksiya',d:'Çətin',q:'y=3x−4, x=6 olduqda y neçədir?',o:['12','14','16','18'],a:1,e:'18−4=14',p:6},
+  {t:'Həndəsə',d:'Çətin',q:'Düzbucaqlının sahəsi 48 sm², bir tərəfi 6 smdir. Digər tərəf neçədir?',o:['6','8','10','12'],a:1,e:'48÷6=8 sm',p:6},
+  {t:'Faiz',d:'Çətin',q:'Bir məhsul 240 manatdan 15% endirimlə satılır. Yeni qiymət neçədir?',o:['196','204','216','224'],a:2,e:'240×0,85=204',p:6},
+  {t:'Qüvvətlər',d:'Çətin',q:'2⁴÷2² neçədir?',o:['2','4','8','16'],a:1,e:'2²=4',p:6},
+  {t:'Kəsrlər',d:'Çətin',q:'5/6−1/3 neçədir?',o:['1/2','2/3','1/3','5/9'],a:0,e:'1/3=2/6, 5/6−2/6=1/2',p:6},
+  {t:'Ədədi ifadə',d:'Çətin',q:'3(4−7)+5 neçədir?',o:['−9','−4','4','9'],a:1,e:'3×(−3)+5=−4',p:6},
+  {t:'Mütənasiblik',d:'Çətin',q:'x/12=5/8 olarsa x neçədir?',o:['6,5','7','7,5','8'],a:2,e:'x=12×5/8=7,5',p:6},
+  {t:'Statistika',d:'Çətin',q:'3, 5, 7, 9, 11 ədədlərinin medianı neçədir?',o:['5','7','8','9'],a:1,e:'Ortadakı qiymət 7-dir',p:6},
+  {t:'Həndəsə',d:'Çətin',q:'Kvadratın perimetri 36 smdir. Sahəsi neçədir?',o:['64','72','81','90'],a:2,e:'Tərəf 36÷4=9; S=81 sm²',p:10},
+  {t:'Kvadrat tənlik',d:'Çətin',q:'x²−9x+20=0 tənliyinin kökləri hansıdır?',o:['2 və 10','4 və 5','3 və 6','1 və 20'],a:1,e:'(x−4)(x−5)=0',p:10},
+  {t:'Pifaqor',d:'Çətin',q:'Katetləri 5 sm və 12 sm olan üçbucağın hipotenuzu neçədir?',o:['11','12','13','17'],a:2,e:'√(25+144)=13',p:10},
+  {t:'Funksiya',d:'Çətin',q:'f(x)=x²−2x+3, f(4) neçədir?',o:['9','10','11','12'],a:2,e:'16−8+3=11',p:10},
+  {t:'Faiz',d:'Çətin',q:'800 manatlıq məhsul əvvəl 10% bahalaşdı, sonra 10% ucuzlaşdı. Son qiymət neçədir?',o:['792','800','808','810'],a:0,e:'800×1,1×0,9=792',p:10},
+  {t:'Tənlik',d:'Çətin',q:'(x−2)/3=5 olarsa x neçədir?',o:['13','15','17','18'],a:2,e:'x−2=15, x=17',p:10},
+  {t:'Həndəsə',d:'Çətin',q:'Üçbucağın əsası 14 sm, hündürlüyü 9 smdir. Sahəsi neçədir?',o:['54','63','72','126'],a:1,e:'S=14×9÷2=63 sm²',p:10},
+  {t:'Cəbr',d:'Çətin',q:'x+y=10 və x−y=2 olarsa x neçədir?',o:['4','5','6','8'],a:2,e:'2x=12, x=6',p:10},
+  {t:'Qüvvətlər',d:'Çətin',q:'5²+2³−3² neçədir?',o:['16','18','24','32'],a:1,e:'25+8−9=24',p:10},
+  {t:'Mütənasiblik',d:'Çətin',q:'Bir xəritədə 1 sm 5 kmə bərabərdir. 7,2 sm məsafə gerçəkdə neçə kmdir?',o:['30','32','36','40'],a:2,e:'7,2×5=36 km',p:10},
+  {t:'Kvadrat tənlik',d:'Çətin',q:'x²−7x+12=0 tənliyində köklərin cəmi neçədir?',o:['5','7','12','19'],a:1,e' :'',p:10},
+  {t:'Həndəsə',d:'Çətin',q:'Düzbucaqlının diaqonalı 10 sm, bir tərəfi 6 smdir. Digər tərəf neçədir?',o:['6','8','10','12'],a:1,e:'6²+x²=10², x=8',p:10},
+  {t:'Kəsrlər',d:'Çətin',q:'1/(2) + 1/(6) neçədir?',o:['1/3','2/3','1/2','3/4'],a:0,e:'3/6+1/6=4/6=2/3',p:10},
+  {t:'Ədədlər',d:'Çətin',q:'√144 + √81 neçədir?',o:['17','19','21','23'],a:1,e:'12+9=21',p:10},
+  {t:'Tənliklər',d:'Çətin',q:'3(x−2)+4=19 olarsa x neçədir?',o:['5','6','7','8'],a:2,e:'3x−6+4=19, 3x=21, x=7',p:10},
+  {t:'Məntiq',d:'Çətin',q:'Bir ədədin 20%-i 18dirsə həmin ədəd neçədir?',o:['72','80','90','100'],a:2,e:'18÷0,2=90',p:20},
+  {t:'Cəbr',d:'Çətin',q:'x²−10x+25=0 tənliyinin kökü neçədir?',o:['−5','0','5','10'],a:2,e:'(x−5)²=0, x=5',p:20},
+  {t:'Həndəsə',d:'Çətin',q:'Radiusu 10 sm olan dairənin sahəsini π=3 götürərək hesablayın.',o:['100','200','300','600'],a:2,e:'S=πr²=3×100=300 sm²',p:20},
+  {t:'Faiz',d:'Çətin',q:'Bir məhsulun qiyməti 25% artırıldıqdan sonra 250 manat oldu. İlkin qiymət neçə manat idi?',o:['180','200','210','225'],a:1,e:'250÷1,25=200',p:20}
+];
+// Möhkəm doğrulama: bankın cəmi və çəki bölgüsü.
+const weights={3:4,4:2,6:5,10:3,20:1};
+if(bank.length!==60 || Object.keys(weights).some(p=>bank.filter(x=>x.p===+p).length!==weights[p]) || bank.reduce((s,x)=>s+x.p,0)!==300){
+  document.body.innerHTML='<div style="color:#fff;font-family:Arial;padding:40px">Sual bankında konfiqurasiya xətası aşkarlandı. Administratora müraciət edin.</div>';
+  throw new Error('Bank configuration error');
+}
+let attempt=Number(localStorage.getItem('math8_attempt')||0)+1;
+let questions=[],i=0,score=0,correct=0,answered=0,timerId=null,remaining=35*60;
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]];}return a}
+function start(){
+  const groups={3:shuffle(bank.filter(x=>x.p===3)).slice(0,4),4:shuffle(bank.filter(x=>x.p===4)).slice(0,2),6:shuffle(bank.filter(x=>x.p===6)).slice(0,5),10:shuffle(bank.filter(x=>x.p===10)).slice(0,3),20:shuffle(bank.filter(x=>x.p===20)).slice(0,1)};
+  questions=shuffle(Object.values(groups).flat()); i=0; score=0; correct=0; answered=0; remaining=35*60;
+  $('game').style.display='block';$('finish').classList.remove('show');$('score').textContent='0';$('attempt').textContent=attempt; startTimer(); render();
+}
+function startTimer(){clearInterval(timerId); updateTimer(); timerId=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timerId);finish();}},1000)}
+function updateTimer(){const m=Math.floor(remaining/60).toString().padStart(2,'0'),s=(remaining%60).toString().padStart(2,'0');$('timer').textContent=`${m}:${s}`;$('timer').classList.toggle('safe',remaining>600)}
+function render(){
+ const q=questions[i]; $('topic').textContent=`${q.t} • ${q.d}`;$('counter').textContent=`Sual ${i+1} / 15`;$('bar').style.width=`${(i/15)*100}%`;$('question').textContent=q.q;$('weight').textContent=`Bu sual: ${q.p} bal`;$('currentPoints').textContent=`${q.p} bal`;$('unanswered').textContent=15-answered;
+ const box=$('options');box.innerHTML='';$('feedback').className='feedback';$('feedback').textContent='';$('next').disabled=true;
+ q.o.forEach((text,idx)=>{const b=document.createElement('button');b.className='opt';b.textContent=text;b.onclick=()=>answer(idx);box.appendChild(b)});
+}
+function answer(choice){
+ const q=questions[i];document.querySelectorAll('.opt').forEach(b=>b.disabled=true);answered++;
+ document.querySelectorAll('.opt')[q.a].classList.add('correct');
+ const fb=$('feedback');
+ if(choice===q.a){score+=q.p;correct++;fb.className='feedback show good';fb.innerHTML=`✅ Düz cavab! <span style="display:block;margin-top:5px">+${q.p} bal • ${q.e}</span>`;}
+ else{document.querySelectorAll('.opt')[choice].classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=`❌ Səhv cavab. <span style="display:block;margin-top:5px">Doğru cavab: <b>${q.o[q.a]}</b> • ${q.e}</span>`;}
+ $('score').textContent=score;$('unanswered').textContent=15-answered;$('bar').style.width=`${((i+1)/15)*100}%`;$('next').disabled=false;$('next').textContent=i===14?'Nəticəni göstər →':'Növbəti sual →';
+}
+$('next').onclick=()=>{if(i<14){i++;render()}else finish()};
+function gradeFor(s){if(s<30)return 2;if(s<60)return 3;if(s<80)return 4;return 5}
+function finish(){clearInterval(timerId);$('game').style.display='none';$('finish').classList.add('show');const g=gradeFor(score);$('finalScore').textContent=`${score} bal`;$('gradeText').textContent=`Qiymət: ${g}`;$('correctCount').textContent=correct;$('wrongCount').textContent=15-correct;$('percent').textContent=`${score}%`;$('attempt').textContent=attempt;localStorage.setItem('math8_attempt',String(attempt));}
+function restart(){attempt++;start()}
+start();
+</script>
+</body></html>
