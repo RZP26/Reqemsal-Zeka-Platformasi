@@ -1,62 +1,40 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Riyaziyyat 8-ci sinif • İnteraktiv kartlar</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Riyaziyyat 8-ci sinif • İnteraktiv Quiz Kartları</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e3a8a);min-height:100vh;color:#0f172a;display:flex;align-items:center;justify-content:center;padding:24px}.app{width:min(900px,100%)}.header{color:white;margin-bottom:18px}.header h1{margin:0 0 6px;font-size:clamp(28px,5vw,42px)}.header p{margin:0;color:#dbeafe}.card{background:#fff;border-radius:26px;padding:30px;box-shadow:0 24px 60px rgba(0,0,0,.25)}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.badge{background:#dbeafe;color:#1e40af;font-weight:700;padding:8px 12px;border-radius:999px}.score{font-weight:800}.progress{height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin-bottom:30px}.bar{height:100%;width:0;background:#2563eb;transition:.3s}.question{font-size:clamp(24px,4vw,34px);line-height:1.25;font-weight:800;margin:22px 0}.answer{display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:20px;margin:18px 0}.answer.show{display:block}.answer b{color:#166534}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.btn{border:0;border-radius:14px;padding:13px 18px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:#2563eb;color:#fff}.secondary{background:#e2e8f0;color:#0f172a}.success{background:#16a34a;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.mini{background:#f8fafc;border-radius:14px;padding:14px}.mini small{display:block;color:#64748b;margin-bottom:3px}.finish{display:none;text-align:center}.finish.show{display:block}.finish h2{font-size:34px;margin-top:8px}.score-big{font-size:60px;font-weight:900;color:#2563eb}.footer{text-align:center;color:#cbd5e1;font-size:13px;margin-top:14px}@media(max-width:640px){.card{padding:20px}.meta{grid-template-columns:1fr}.actions .btn{width:100%}}</style>
-</head>
-<body>
-<div class="app">
-  <div class="header"><h1>Riyaziyyat • 8-ci sinif</h1><p>İnteraktiv bilik kartları | Cavabı aç, düşün, yoxla və xal qazan.</p></div>
-  <div class="card">
-    <div id="game">
-      <div class="top"><span class="badge" id="topic">Cəbr</span><span class="score">Xal: <span id="score">0</span></span></div>
-      <div class="progress"><div class="bar" id="bar"></div></div>
-      <div id="counter" style="color:#64748b;font-weight:700"></div>
-      <div class="question" id="question"></div>
-      <div class="answer" id="answer"></div>
-      <div class="actions">
-        <button class="btn secondary" id="showBtn">👁 Cavabı göstər</button>
-        <button class="btn primary" id="nextBtn" disabled>➡️ Növbəti kart</button>
-      </div>
-      <div class="meta">
-        <div class="mini"><small>Səviyyə</small><strong id="level">Orta</strong></div>
-        <div class="mini"><small>Məqsəd</small><strong>Qaydadan tətbiqə</strong></div>
-      </div>
-    </div>
-    <div class="finish" id="finish">
-      <div style="font-size:48px">🎉</div><h2>Kartlar tamamlandı!</h2>
-      <div class="score-big" id="finalScore">0</div>
-      <p>12 kartdan ibarət məşqi bitirdiniz.</p>
-      <button class="btn success" onclick="restart()">🔄 Yenidən başla</button>
-    </div>
-  </div>
-  <div class="footer">Rəqəmsal Zəka Platforması • Tədris üçün hazırlanmış interaktiv nümunə</div>
-</div>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e3a8a);min-height:100vh;color:#0f172a;display:flex;align-items:center;justify-content:center;padding:24px}.app{width:min(900px,100%)}.header{color:#fff;margin-bottom:18px}.header h1{margin:0 0 6px;font-size:clamp(28px,5vw,42px)}.header p{margin:0;color:#dbeafe}.card{background:#fff;border-radius:26px;padding:30px;box-shadow:0 24px 60px rgba(0,0,0,.25)}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.badge{background:#dbeafe;color:#1e40af;font-weight:800;padding:8px 13px;border-radius:999px}.score{font-weight:900;font-size:18px}.progress{height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin-bottom:24px}.bar{height:100%;width:0;background:#2563eb;transition:.35s}.counter{color:#64748b;font-weight:800}.question{font-size:clamp(23px,4vw,34px);line-height:1.3;font-weight:850;margin:18px 0 22px}.options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.option{border:2px solid #e2e8f0;background:#f8fafc;border-radius:16px;padding:17px;text-align:left;font-size:17px;font-weight:750;cursor:pointer;transition:.2s}.option:hover{border-color:#93c5fd;background:#eff6ff}.option.correct{border-color:#16a34a;background:#dcfce7;color:#166534}.option.wrong{border-color:#dc2626;background:#fee2e2;color:#991b1b}.option:disabled{cursor:default}.feedback{display:none;border-radius:16px;padding:16px;margin-top:18px;font-weight:800}.feedback.show{display:block}.feedback.good{background:#dcfce7;color:#166534}.feedback.bad{background:#fee2e2;color:#991b1b}.explanation{margin-top:6px;font-weight:600}.actions{display:flex;justify-content:flex-end;margin-top:20px}.btn{border:0;border-radius:14px;padding:13px 20px;font-size:16px;font-weight:850;cursor:pointer;background:#2563eb;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.mini{background:#f8fafc;border-radius:14px;padding:13px}.mini small{display:block;color:#64748b;margin-bottom:3px}.finish{display:none;text-align:center}.finish.show{display:block}.finish h2{font-size:34px;margin:8px 0}.score-big{font-size:60px;font-weight:950;color:#2563eb}.result{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.result div{background:#f8fafc;padding:15px;border-radius:14px}.result b{display:block;font-size:24px}.footer{text-align:center;color:#cbd5e1;font-size:13px;margin-top:14px}@media(max-width:640px){.card{padding:20px}.options{grid-template-columns:1fr}.meta,.result{grid-template-columns:1fr}.option{font-size:16px}}
+</style></head>
+<body><div class="app">
+<div class="header"><h1>Riyaziyyat • 8-ci sinif</h1><p>Variantı seç → cavabını yoxla → xalını qazan!</p></div>
+<div class="card"><div id="game">
+<div class="top"><span class="badge" id="topic"></span><span class="score">🏆 Xal: <span id="score">0</span></span></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="counter" id="counter"></div>
+<div class="question" id="question"></div><div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div><div class="actions"><button class="btn" id="nextBtn" disabled>Növbəti sual ➜</button></div>
+<div class="meta"><div class="mini"><small>Səviyyə</small><strong id="level"></strong></div><div class="mini"><small>Qiymətləndirmə</small><strong>+10 düz / 0 səhv</strong></div></div>
+</div><div class="finish" id="finish"><div style="font-size:48px">🎉</div><h2>Quiz tamamlandı!</h2><div class="score-big" id="finalScore">0 xal</div><div class="result"><div><small>Düzgün</small><b id="correctCount">0</b></div><div><small>Səhv</small><b id="wrongCount">0</b></div><div><small>Nəticə</small><b id="percent">0%</b></div></div><button class="btn" onclick="restart()">🔄 Yenidən başla</button></div></div>
+<div class="footer">Rəqəmsal Zəka Platforması • 8-ci sinif Riyaziyyat</div></div>
 <script>
 const cards=[
- {topic:'Cəbr',level:'Asan',q:'3x + 7 = 22 tənliyində x-in qiyməti neçədir?',a:'3x = 15, deməli x = 5.'},
- {topic:'Cəbr',level:'Orta',q:'x² − 9 ifadəsini vuruqlara ayırın.',a:'Fərqlərin kvadratı: x² − 3² = (x − 3)(x + 3).'},
- {topic:'Faiz',level:'Orta',q:'240 manatın 15%-i neçə manatdır?',a:'240 × 0,15 = 36 manat.'},
- {topic:'Funksiya',level:'Orta',q:'y = 2x + 1 funksiyasında x = 4 olduqda y neçədir?',a:'y = 2·4 + 1 = 9.'},
- {topic:'Kvadrat tənlik',level:'Çətin',q:'x² − 5x + 6 = 0 tənliyinin kökləri hansılardır?',a:'(x − 2)(x − 3)=0 olduğundan köklər 2 və 3-dür.'},
- {topic:'Həndəsə',level:'Orta',q:'Üçbucağın daxili bucaqlarının cəmi neçə dərəcədir?',a:'Hər üçbucaqda daxili bucaqların cəmi 180°-dir.'},
- {topic:'Pifaqor',level:'Orta',q:'Katetləri 6 sm və 8 sm olan düzbucaqlı üçbucağın hipotenuzu neçə sm-dir?',a:'c = √(6² + 8²) = √100 = 10 sm.'},
- {topic:'Mütənasiblik',level:'Asan',q:'3 dəftər 9 manatdırsa, 7 dəftər neçə manat edər?',a:'1 dəftər 3 manatdır. 7 dəftər 21 manatdır.'},
- {topic:'Ədədlər',level:'Asan',q:'−7 + 12 ifadəsinin qiyməti neçədir?',a:'12 − 7 = 5.'},
- {topic:'Qüvvətlər',level:'Orta',q:'2³ · 2² hasilini sadələşdirin.',a:'Eyni əsaslı qüvvətlər vurulduqda üstlər toplanır: 2⁵ = 32.'},
- {topic:'Həndəsə',level:'Çətin',q:'Düzbucaqlının tərəfləri 7 sm və 4 sm-dir. Sahəsi neçə sm²-dir?',a:'S = a·b = 7·4 = 28 sm².'},
- {topic:'Statistika',level:'Orta',q:'4, 6, 8, 10, 12 ədədlərinin ədədi ortası neçədir?',a:'Cəm 40, say 5-dir. 40/5 = 8.'}
+{topic:'Cəbr',level:'Asan',q:'3x + 7 = 22 tənliyində x-in qiyməti neçədir?',o:['3','5','7','9'],a:1,e:'3x = 15, deməli x = 5.'},
+{topic:'Cəbr',level:'Orta',q:'x² − 9 ifadəsinin vuruqlara ayrılmış forması hansıdır?',o:['(x−9)(x+1)','(x−3)(x+3)','(x−9)²','x(x−9)'],a:1,e:'Fərqlərin kvadratı: x²−3² = (x−3)(x+3).'},
+{topic:'Faiz',level:'Orta',q:'240 manatın 15%-i neçə manatdır?',o:['24','30','36','42'],a:2,e:'240 × 0,15 = 36 manat.'},
+{topic:'Funksiya',level:'Orta',q:'y = 2x + 1 funksiyasında x = 4 olduqda y neçədir?',o:['7','8','9','10'],a:2,e:'y = 2·4 + 1 = 9.'},
+{topic:'Kvadrat tənlik',level:'Çətin',q:'x² − 5x + 6 = 0 tənliyinin kökləri hansılardır?',o:['1 və 6','2 və 3','−2 və −3','0 və 6'],a:1,e:'(x−2)(x−3)=0 olduğundan köklər 2 və 3-dür.'},
+{topic:'Həndəsə',level:'Orta',q:'Üçbucağın daxili bucaqlarının cəmi neçə dərəcədir?',o:['90°','180°','270°','360°'],a:1,e:'Hər üçbucaqda daxili bucaqların cəmi 180°-dir.'},
+{topic:'Pifaqor',level:'Orta',q:'Katetləri 6 sm və 8 sm olan düzbucaqlı üçbucağın hipotenuzu neçə sm-dir?',o:['8','9','10','12'],a:2,e:'c = √(6²+8²) = √100 = 10 sm.'},
+{topic:'Mütənasiblik',level:'Asan',q:'3 dəftər 9 manatdırsa, 7 dəftər neçə manat edər?',o:['18','21','24','27'],a:1,e:'1 dəftər 3 manatdır. 7 dəftər 21 manatdır.'},
+{topic:'Ədədlər',level:'Asan',q:'−7 + 12 ifadəsinin qiyməti neçədir?',o:['−19','−5','5','19'],a:2,e:'12−7 = 5.'},
+{topic:'Qüvvətlər',level:'Orta',q:'2³ · 2² hasilinin qiyməti neçədir?',o:['16','24','32','64'],a:2,e:'Eyni əsaslı qüvvətlərdə üstlər toplanır: 2⁵ = 32.'},
+{topic:'Həndəsə',level:'Çətin',q:'Düzbucaqlının tərəfləri 7 sm və 4 sm-dir. Sahəsi neçə sm²-dir?',o:['11','22','28','44'],a:2,e:'S = a·b = 7·4 = 28 sm².'},
+{topic:'Statistika',level:'Orta',q:'4, 6, 8, 10, 12 ədədlərinin ədədi ortası neçədir?',o:['6','7','8','9'],a:2,e:'Cəm 40, say 5-dir. 40/5 = 8.'}
 ];
-let index=0,score=0;
+let index=0,score=0,correct=0,wrong=0,answered=false;
 const $=id=>document.getElementById(id);
-function render(){const c=cards[index];$('topic').textContent=c.topic;$('level').textContent=c.level;$('counter').textContent=`Kart ${index+1} / ${cards.length}`;$('question').textContent=c.q;$('answer').innerHTML='<b>Cavab:</b> '+c.a;$('answer').classList.remove('show');$('showBtn').disabled=false;$('nextBtn').disabled=true;$('bar').style.width=((index)/cards.length*100)+'%';}
-$('showBtn').onclick=()=>{if(!$('answer').classList.contains('show')){$('answer').classList.add('show');$('showBtn').disabled=true;$('nextBtn').disabled=false;score+=10;$('score').textContent=score;}};
-$('nextBtn').onclick=()=>{index++;if(index>=cards.length){$('game').style.display='none';$('finish').classList.add('show');$('finalScore').textContent=score+' xal';$('bar').style.width='100%';}else render();};
-function restart(){index=0;score=0;$('score').textContent=0;$('finish').classList.remove('show');$('game').style.display='block';render();}
-render();
-</script>
-</body>
-</html>
+function render(){let c=cards[index];answered=false;$('topic').textContent=c.topic;$('level').textContent=c.level;$('counter').textContent=`Sual ${index+1} / ${cards.length}`;$('question').textContent=c.q;$('bar').style.width=(index/cards.length*100)+'%';$('feedback').className='feedback';$('feedback').innerHTML='';$('nextBtn').disabled=true;$('options').innerHTML='';c.o.forEach((text,i)=>{let b=document.createElement('button');b.className='option';b.textContent=String.fromCharCode(65+i)+') '+text;b.onclick=()=>choose(i,b);$('options').appendChild(b)})}
+function choose(i,button){if(answered)return;answered=true;let c=cards[index];let buttons=[...document.querySelectorAll('.option')];buttons.forEach(b=>b.disabled=true);if(i===c.a){button.classList.add('correct');score+=10;correct++;$('feedback').className='feedback show good';$('feedback').innerHTML='✅ Düz cavab! <div class="explanation">+10 xal. '+c.e+'</div>'}else{button.classList.add('wrong');buttons[c.a].classList.add('correct');wrong++;$('feedback').className='feedback show bad';$('feedback').innerHTML='❌ Səhv cavab! <div class="explanation">Düzgün cavab: '+String.fromCharCode(65+c.a)+') '+c.o[c.a]+'. '+c.e+'</div>'}$('score').textContent=score;$('nextBtn').disabled=false}
+$('nextBtn').onclick=()=>{index++;if(index>=cards.length){$('game').style.display='none';$('finish').classList.add('show');$('finalScore').textContent=score+' xal';$('correctCount').textContent=correct;$('wrongCount').textContent=wrong;$('percent').textContent=Math.round(correct/cards.length*100)+'%'}else render()};
+function restart(){index=0;score=0;correct=0;wrong=0;$('score').textContent=0;$('finish').classList.remove('show');$('game').style.display='block';render()};render();
+</script></body></html>
