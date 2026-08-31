@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Həqiqi ədədlər • Yaddaş kartları</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#312e81);color:#0f172a;padding:24px}.app{width:min(980px,100%);margin:auto}.hero{color:#fff;margin-bottom:18px}.hero h1{margin:0 0 7px;font-size:clamp(28px,5vw,46px)}.hero p{margin:0;color:#c7d2fe;font-size:16px}.panel{background:#fff;border-radius:28px;padding:24px;box-shadow:0 25px 70px #0005}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.pill{padding:9px 13px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:800}.progress{height:9px;background:#e5e7eb;border-radius:20px;overflow:hidden;margin:18px 0}.bar{height:100%;width:0;background:#4f46e5;transition:.3s}.card-wrap{perspective:1200px;margin:25px auto;max-width:760px}.flashcard{height:350px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .6s}.flashcard.flipped{transform:rotateY(180deg)}.side{position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;padding:35px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid #e5e7eb}.front{background:linear-gradient(145deg,#eef2ff,#fff)}.back{background:linear-gradient(145deg,#ecfdf5,#fff);transform:rotateY(180deg)}.label{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;font-weight:900;color:#6366f1;margin-bottom:18px}.back .label{color:#059669}.content{font-size:clamp(24px,4vw,38px);line-height:1.3;font-weight:900}.hint{margin-top:18px;color:#64748b;font-weight:700}.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:14px;padding:13px 20px;font-size:16px;font-weight:850;cursor:pointer;background:#4f46e5;color:#fff}.btn.secondary{background:#e5e7eb;color:#111827}.btn.success{background:#059669}.btn.danger{background:#dc2626}.btn:disabled{opacity:.45;cursor:not-allowed}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}.stat{background:#f8fafc;border-radius:15px;padding:13px;text-align:center}.stat small{display:block;color:#64748b}.stat b{font-size:22px}.topic{margin-top:18px;text-align:center;color:#475569;font-weight:800}.finish{display:none;text-align:center;padding:35px}.finish.show{display:block}.finish h2{font-size:34px;margin:8px 0}.score{font-size:60px;font-weight:950;color:#4f46e5}.footer{text-align:center;color:#cbd5e1;font-size:13px;margin-top:14px}.legend{margin-top:18px;background:#f8fafc;border-radius:16px;padding:15px;color:#475569;line-height:1.6}@media(max-width:650px){body{padding:14px}.panel{padding:16px}.flashcard{height:390px}.side{padding:24px}.stats{grid-template-columns:1fr 1fr}.content{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero"><h1>📚 Həqiqi ədədlər</h1><p>Riyaziyyat • 8-ci sinif • İnteraktiv yaddaş kartları</p></header>
+<section class="panel">
+<div id="game">
+<div class="toolbar"><span class="pill" id="counter">1 / 20</span><span class="pill" id="score">⭐ 0 bal</span><span class="pill" id="level">Orta</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="card-wrap"><div class="flashcard" id="flashcard" onclick="flip()">
+<div class="side front"><div class="label">Sual</div><div class="content" id="front"></div><div class="hint">Cavabı görmək üçün karta toxun və ya kliklə</div></div>
+<div class="side back"><div class="label">Cavab</div><div class="content" id="back"></div><div class="hint">İzahı oxu və özünü qiymətləndir</div></div>
+</div></div>
+<div class="topic" id="topic"></div>
+<div class="controls"><button class="btn secondary" onclick="prev()">← Əvvəlki</button><button class="btn" onclick="flip()">🔄 Kartı çevir</button><button class="btn" onclick="next()">Növbəti →</button></div>
+<div class="controls" style="margin-top:10px"><button class="btn success" onclick="mark(true)">✓ Bildim</button><button class="btn danger" onclick="mark(false)">✗ Təkrar et</button></div>
+<div class="stats"><div class="stat"><small>Bildim</small><b id="known">0</b></div><div class="stat"><small>Təkrar</small><b id="repeat">0</b></div><div class="stat"><small>Kartlar</small><b id="total">20</b></div><div class="stat"><small>Nəticə</small><b id="percent">0%</b></div></div>
+<div class="legend"><b>📌 Qayda:</b> Rasional ədədlər kəsr şəklində ifadə oluna bilən ədədlərdir. İrrasional ədədlər isə belə ifadə oluna bilməyən həqiqi ədədlərdir. Həqiqi ədədlər rasional və irrasional ədədlərin birliyidir.</div>
+</div>
+<div class="finish" id="finish"><div style="font-size:54px">🎓</div><h2>Yaddaş kartları tamamlandı!</h2><div class="score" id="finalScore">0%</div><p id="finalText"></p><button class="btn" onclick="restart()">🔄 Yenidən başla</button></div>
+</section>
+<div class="footer">Rəqəmsal Zəka Platforması • 8-ci sinif Riyaziyyat</div>
+</div>
+<script>
+const cards=[
+{t:'Əsas anlayış',q:'Həqiqi ədədlər nədir?',a:'Rasional və irrasional ədədlərin birlikdə əmələ gətirdiyi çoxluğa həqiqi ədədlər çoxluğu deyilir.',l:'Asan'},
+{t:'Əsas anlayış',q:'Rasional ədəd nədir?',a:'m/n şəklində yazıla bilən ədəddir. Burada m və n tam ədədlərdir, n ≠ 0.',l:'Asan'},
+{t:'Əsas anlayış',q:'İrrasional ədəd nədir?',a:'İki tam ədədin nisbəti şəklində yazıla bilməyən həqiqi ədəddir. Məsələn: √2, √3, π.',l:'Asan'},
+{t:'Çoxluqlar',q:'Hansı ədədlər natural ədədlərdir?',a:'1, 2, 3, 4, ... kimi müsbət tam ədədlər natural ədədlərdir.',l:'Asan'},
+{t:'Çoxluqlar',q:'Tam ədədlərə hansı ədədlər daxildir?',a:'Mənfi tam ədədlər, 0 və müsbət tam ədədlər: ..., −3, −2, −1, 0, 1, 2, 3, ...',l:'Asan'},
+{t:'Onluq kəsrlər',q:'Sonlu onluq kəsr rasionaldırmı?',a:'Bəli. Sonlu onluq kəsr həmişə rasional ədəd kimi kəsr şəklində yazıla bilər.',l:'Asan'},
+{t:'Onluq kəsrlər',q:'Dövri sonsuz onluq kəsr rasionaldırmı?',a:'Bəli. Məsələn 0,(3) = 1/3. Dövri onluq kəsrlər rasional ədədlərdir.',l:'Orta'},
+{t:'Onluq kəsrlər',q:'İrrasional ədədlərin onluq yazılışı necə olur?',a:'Sonsuz və dövri olmayan onluq kəsr şəklində olur.',l:'Orta'},
+{t:'Köklər',q:'√49 neçədir?',a:'7. Çünki 7² = 49.',l:'Asan'},
+{t:'Köklər',q:'√2 rasionaldır, yoxsa irrasional?',a:'İrrasionaldır. √2 iki tam ədədin nisbəti şəklində dəqiq ifadə edilə bilməz.',l:'Orta'},
+{t:'Köklər',q:'√81 hansı ədədə bərabərdir?',a:'9. Çünki 9² = 81.',l:'Asan'},
+{t:'Müqayisə',q:'−3 və −5 ədədlərindən hansı böyükdür?',a:'−3 böyükdür. Ədəd oxunda sağda yerləşən ədəd daha böyükdür.',l:'Asan'},
+{t:'Müqayisə',q:'|−7| neçədir?',a:'7. Ədədin modulu onun 0-dan məsafəsidir.',l:'Asan'},
+{t:'Ədəd oxu',q:'Ədəd oxunda 0-dan sağda yerləşən ədədlərin işarəsi necədir?',a:'Müsbətdir. 0-dan solda yerləşən ədədlər mənfidir.',l:'Asan'},
+{t:'Əməliyyat',q:'İki mənfi ədədin hasili hansı işarəli olur?',a:'Müsbət. Məsələn: (−3)×(−2)=6.',l:'Asan'},
+{t:'Əməliyyat',q:'Müsbət və mənfi ədədin hasili hansı işarəli olur?',a:'Mənfi. Məsələn: 4×(−2)=−8.',l:'Asan'},
+{t:'Qüvvət',q:'(−2)² neçədir?',a:'4. Cüt qüvvətdə mənfi işarə müsbət nəticə verir: (−2)²=4.',l:'Orta'},
+{t:'Qüvvət',q:'(−2)³ neçədir?',a:'−8. Tək qüvvətdə mənfi işarə saxlanılır: (−2)³=−8.',l:'Orta'},
+{t:'Həqiqi ədədlər',q:'5/8 hansı tip ədəddir?',a:'Rasional həqiqi ədəddir. Sonlu onluq kəsr kimi 0,625 yazılır.',l:'Orta'},
+{t:'Həqiqi ədədlər',q:'√9 + √16 neçədir?',a:'7. √9=3 və √16=4, deməli 3+4=7.',l:'Orta'}
+];
+let i=0,known=0,repeat=0,points=0,answered=new Array(cards.length).fill(null);
+const $=id=>document.getElementById(id);
+function render(){const c=cards[i];$('front').textContent=c.q;$('back').textContent=c.a;$('topic').textContent='Mövzu: '+c.t;$('level').textContent=c.l;$('counter').textContent=`${i+1} / ${cards.length}`;$('bar').style.width=`${((i+1)/cards.length)*100}%`;$('known').textContent=known;$('repeat').textContent=repeat;$('total').textContent=cards.length;$('score').textContent=`⭐ ${points} bal`;$('percent').textContent=`${Math.round((known/(known+repeat||1))*100)}%`;$('flashcard').classList.remove('flipped');}
+function flip(){$('flashcard').classList.toggle('flipped')}
+function next(){if(i<cards.length-1){i++;render()}else finish()}
+function prev(){if(i>0){i--;render()}}
+function mark(ok){if(answered[i]===true){known--}if(answered[i]===false){repeat--}answered[i]=ok;if(ok){known++;points+=5}else repeat++;if(i===cards.length-1)finish();else next();render()}
+function finish(){$('game').style.display='none';$('finish').classList.add('show');let total=known+repeat;let pct=total?Math.round(known/total*100):0;$('finalScore').textContent=pct+'%';$('finalText').textContent=`${known} kartı bildiniz, ${repeat} kartı təkrar etməlisiniz. Toplam ${points} bal.`}
+function restart(){i=0;known=0;repeat=0;points=0;answered=new Array(cards.length).fill(null);$('game').style.display='block';$('finish').classList.remove('show');render()}
+render();
+</script>
+</body>
+</html>
