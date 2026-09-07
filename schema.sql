@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS access_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code_hash TEXT UNIQUE NOT NULL, label TEXT, active INTEGER NOT NULL DEFAULT 1, expires_at TEXT, active_session_id TEXT, login_time TEXT, last_activity TEXT, logout_time TEXT, device_info TEXT);
+CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, access_code_id INTEGER NOT NULL, created_at TEXT NOT NULL, last_activity TEXT NOT NULL, expires_at TEXT NOT NULL, device_info TEXT, active INTEGER NOT NULL DEFAULT 1, FOREIGN KEY(access_code_id) REFERENCES access_codes(id));
+CREATE TABLE IF NOT EXISTS materials (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT NOT NULL, title TEXT NOT NULL, module TEXT NOT NULL, content TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sources (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, category TEXT, source_date TEXT, official_url TEXT, file_path TEXT, status TEXT NOT NULL DEFAULT 'valid');
+CREATE TABLE IF NOT EXISTS announcements (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS audit_log (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT, action TEXT NOT NULL, metadata TEXT, created_at TEXT NOT NULL);
